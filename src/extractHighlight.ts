@@ -1,5 +1,6 @@
 import { PDFFile } from "src/types";
 import { ANNOTS_TREATED_AS_HIGHLIGHTS } from "src/settings";
+import { PDFDocumentProxy, TextContent, TextItem } from "pdfjs-dist/types/src/display/api";
 
 // return text between min and max, x and y
 function searchQuad(
@@ -86,7 +87,6 @@ export function extractHighlight(annot: any, items: any) {
 	return highlight;
 }
 
-
 // load the PDFpage, then get all Annotations
 // we look only at desiredAnnotations from the user's settings
 // if its a underline, squiggle or highlight, extract Highlight of the Annotation
@@ -94,6 +94,7 @@ export function extractHighlight(annot: any, items: any) {
 async function loadPage(
 	page,
 	pagenum: number,
+	pageLabel: string,
 	file: PDFFile,
 	containingFolder: string,
 	total: object[],
@@ -110,7 +111,7 @@ async function loadPage(
 	});
 
 	// sort text elements
-	content.items.sort(function (a1, a2) {
+	content.items.sort(function (a1: TextItem, a2: TextItem) {
 		if (a1.transform[5] > a2.transform[5]) return -1; // y coord. descending
 		if (a1.transform[5] < a2.transform[5]) return 1;
 		if (a1.transform[4] > a2.transform[4]) return 1; // x coord. ascending
@@ -136,6 +137,7 @@ async function loadPage(
         anno.file = file;
         anno.filepath = file.path;
         anno.pageNumber = pagenum;
+	anno.pageLabel = pageLabel;
         anno.author = anno.titleObj.str;
         if (!anno.highlightedText) {
         	anno.body = anno.contentsObj.str;
@@ -156,11 +158,20 @@ export async function loadPDFFile(
 ) {
 	const pdf: PDFDocumentProxy = await pdfjsLib.getDocument(file.content)
 		.promise;
+	const pageLabels = await pdf.getPageLabels();
 	for (let i = 1; i <= pdf.numPages; i++) {
 		const page = await pdf.getPage(i);
+		// if no page label is defined, use the page number
+		let pageLabel = '';
+		if (pageLabels && pageLabels[i - 1]) {
+			pageLabel = pageLabels[i - 1];
+		} else {
+			pageLabel = i.toString();
+		}
 		await loadPage(
 			page,
 			i,
+			pageLabel,
 			file,
 			containingFolder,
 			total,
