@@ -1,5 +1,5 @@
 import { PDFFile } from "src/types";
-import { ANNOTS_TREATED_AS_HIGHLIGHTS } from "src/settings";
+import { ANNOTS_TREATED_AS_HIGHLIGHTS, PDFAnnotationPluginSetting } from "src/settings";
 import { PDFDocumentProxy, TextContent, TextItem } from "pdfjs-dist/types/src/display/api";
 
 // return text between min and max, x and y
@@ -98,7 +98,8 @@ async function loadPage(
 	file: PDFFile,
 	containingFolder: string,
 	total: object[],
-	desiredAnnotations: string[]
+	desiredAnnotations: string[],
+	filterByHashtag: boolean
 ) {
 	let annotations = await page.getAnnotations();
 
@@ -126,7 +127,7 @@ async function loadPage(
 			anno.highlightedText = extractHighlight(anno, content.items)
 			console.log("Highlighted Text: " + anno.highlightedText);
 		}
-		if (anno.subtype == 'Highlight') { 
+		if (anno.subtype == 'Highlight' && filterByHashtag) { 
           if (!anno.contentsObj.str.includes('#')) {
             console.log(`Skipping… ` + anno.subtype + ` ` + anno.contentsObj.str)
             return;
@@ -154,7 +155,8 @@ export async function loadPDFFile(
 	pdfjsLib,
 	containingFolder: string,
 	total: object[],
-	desiredAnnotations: string[]
+	desiredAnnotations: string[],
+	filterByHashtag: boolean
 ) {
 	const pdf: PDFDocumentProxy = await pdfjsLib.getDocument(file.content)
 		.promise;
@@ -175,7 +177,8 @@ export async function loadPDFFile(
 			file,
 			containingFolder,
 			total,
-			desiredAnnotations
+			desiredAnnotations,
+			filterByHashtag
 		);
 	}
 }
