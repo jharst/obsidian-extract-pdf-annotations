@@ -35,6 +35,7 @@ export const ANNOTS_TREATED_AS_HIGHLIGHTS = [
 ];
 
 export class PDFAnnotationPluginSetting {
+	public filterByHashtag: boolean;
 	public useStructuringHeadlines: boolean;
 	public useFolderNames: boolean;
 	public sortByTopic: boolean;
@@ -54,6 +55,7 @@ export class PDFAnnotationPluginSetting {
 	};
 
 	constructor() {
+		this.filterByHashtag = true;
 		this.useStructuringHeadlines = true;
 		this.useFolderNames = true;
 		this.sortByTopic = true;
@@ -176,7 +178,7 @@ export class PDFAnnotationPluginSettingTab extends PluginSettingTab {
 			.setName("The following types of annotations should be extracted:")
 			.addTextArea((input) => {
 				input.inputEl.style.width = "100%";
-				input.inputEl.style.height = "10em";
+				input.inputEl.style.height = "5em";
 				this.buildValueInput(input, "desiredAnnotations");
 			});
 
@@ -248,7 +250,7 @@ export class PDFAnnotationPluginSettingTab extends PluginSettingTab {
 				this.buildValueInput(input, "highlightTemplateInternalPDFs");
 			});
 
-    containerEl.createEl("h4", { text: "Structure settings" });
+    containerEl.createEl("h3", { text: "Structure settings" });
 		new Setting(containerEl)
 			.setName("Use structuring headlines")
 			.setDesc(
@@ -290,6 +292,20 @@ export class PDFAnnotationPluginSettingTab extends PluginSettingTab {
 						this.plugin.saveData(this.plugin.settings);
 					})
 			);
+
+		new Setting(containerEl)
+			.setName("Filter Highlights By Hashtag")
+			.setDesc(
+				"If enabled, filters highlights by given hashtag"
+			)
+		  .addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.filterByHashtag)
+					.onChange((value) => {
+						this.plugin.settings.filterByHashtag = value;
+						this.plugin.saveData(this.plugin.settings);
+					})
+			);	
 
 		containerEl.createEl("h3", {
 			text: "Settings for `Extract PDF Annotations on single file`",
