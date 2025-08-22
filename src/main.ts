@@ -79,6 +79,7 @@ export default class PDFAnnotationPlugin extends Plugin {
 		const grandtotal = []; // array that will contain all fetched Annotations
 		const desiredAnnotations =
 			this.settings.parsedSettings.desiredAnnotations;
+		const filterByHashtag = this.settings.filterByHashtag;
 		console.log("loading from file ", pdfFile);
 		const content = await this.app.vault.readBinary(pdfFile);
 		await loadPDFFile(
@@ -86,7 +87,8 @@ export default class PDFAnnotationPlugin extends Plugin {
 			pdfjsLib,
 			containingFolder,
 			grandtotal,
-			desiredAnnotations
+			desiredAnnotations,
+			filterByHashtag
 		);
 		this.sort(grandtotal);
 
@@ -174,12 +176,14 @@ export default class PDFAnnotationPlugin extends Plugin {
 				);
 				const desiredAnnotations =
 					this.settings.parsedSettings.desiredAnnotations;
+				const filterByHashtag = this.settings.filterByHashtag;
 				await loadPDFFile(
 					file,
 					pdfjsLib,
 					containingFolder,
 					grandtotal,
-					desiredAnnotations
+					desiredAnnotations,
+					filterByHashtag
 				);
 			} else {
 				console.log("Data in clipboard is no file.");
@@ -241,6 +245,7 @@ export default class PDFAnnotationPlugin extends Plugin {
 				const grandtotal = []; // array that will contain all fetched Annotations
 				const desiredAnnotations =
 					this.settings.parsedSettings.desiredAnnotations;
+				const filterByHashtag = this.settings.filterByHashtag;
 
 				const pdfjsLib = await loadPdfJs();
 
@@ -262,7 +267,8 @@ export default class PDFAnnotationPlugin extends Plugin {
 											pdfjsLib,
 											file.parent.name,
 											grandtotal,
-											desiredAnnotations
+											desiredAnnotations,
+											filterByHashtag
 										)
 									)
 							);
@@ -285,6 +291,7 @@ export default class PDFAnnotationPlugin extends Plugin {
 			const loadedSettings = await this.loadData();
 			if (loadedSettings) {
 				const toLoad = [
+					"filterByHashtag",
 					"useStructuringHeadlines",
 					"useFolderNames",
 					"sortByTopic",
