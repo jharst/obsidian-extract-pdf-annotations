@@ -1,5 +1,5 @@
 import { PDFFile } from "src/types";
-import { ANNOTS_TREATED_AS_HIGHLIGHTS, PDFAnnotationPluginSetting } from "src/settings";
+import { ANNOTS_TREATED_AS_HIGHLIGHTS } from "src/settings";
 import { PDFDocumentProxy, TextContent, TextItem } from "pdfjs-dist/types/src/display/api";
 
 // return text between min and max, x and y
@@ -138,7 +138,7 @@ async function loadPage(
         anno.file = file;
         anno.filepath = file.path;
         anno.pageNumber = pagenum;
-	anno.pageLabel = pageLabel;
+		anno.pageLabel = pageLabel;
         anno.author = anno.titleObj.str;
         if (!anno.highlightedText) {
         	anno.body = anno.contentsObj.str;
