@@ -291,6 +291,7 @@ export default class PDFAnnotationPlugin extends Plugin {
 			const loadedSettings = await this.loadData();
 			if (loadedSettings) {
 				const toLoad = [
+					"useUnderlinesAsIndex",
 					"filterByHashtag",
 					"useStructuringHeadlines",
 					"useFolderNames",
