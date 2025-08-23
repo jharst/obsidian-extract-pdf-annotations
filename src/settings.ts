@@ -35,6 +35,7 @@ export const ANNOTS_TREATED_AS_HIGHLIGHTS = [
 ];
 
 export class PDFAnnotationPluginSetting {
+	public useUnderlinesAsIndex: boolean;
 	public filterByHashtag: boolean;
 	public useStructuringHeadlines: boolean;
 	public useFolderNames: boolean;
@@ -303,6 +304,20 @@ export class PDFAnnotationPluginSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.filterByHashtag)
 					.onChange((value) => {
 						this.plugin.settings.filterByHashtag = value;
+						this.plugin.saveData(this.plugin.settings);
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Use Underlines to Build Index")
+			.setDesc(
+				"If enabled, uses Underlines to build an index"
+			)
+		  .addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.useUnderlinesAsIndex)
+					.onChange((value) => {
+						this.plugin.settings.useUnderlinesAsIndex = value;
 						this.plugin.saveData(this.plugin.settings);
 					})
 			);	
