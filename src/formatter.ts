@@ -25,8 +25,21 @@ export class PDFAnnotationPluginFormatter {
 		let topic = "";
 		let currentFolder = "";
 		let indentLevel = 0;
-		// console.log("all annots", grandtotal)
+		let index = [];
+		let bibliography = [];
+		
 		grandtotal.forEach((anno) => {
+			
+			//build index if settings are set accordingly
+			if (this.settings.useUnderlinesAsIndex && anno.subtype === "Underline") {
+				if (anno.body && anno.body.includes("#Bibliografie")) {
+					bibliography.push(anno);
+				} else {
+					underlines.push(anno);
+				}
+				return;
+			}
+
 			// print main Title when Topic changes (and settings allow)
 			if (this.settings.useStructuringHeadlines) {
 				if (this.settings.sortByTopic) {
@@ -91,7 +104,34 @@ export class PDFAnnotationPluginFormatter {
 		});
 
 		if (grandtotal.length == 0) return "*No Annotations*";
-		else return text;
+		
+		// add bibliography and index
+		if (bibliography.length > 0) {
+			text += "\n## Bibliographie\n";
+			bibliography.forEach((anno) => {
+				let content = isExternalFile
+					? this.getContentForHighlightFromExternalPDF(anno)
+					: this.getContentForHighlightFromInternalPDF(anno);
+				if (content && content.trim() !== "") {
+					text += content + '\n';
+				}
+			});
+		}
+		
+		if (underlines.length > 0) {
+			text += "\n## Index\n";
+			underlines.forEach((anno) => {
+				let content = isExternalFile
+				? this.getContentForHighlightFromExternalPDF(anno)
+				: this.getContentForHighlightFromInternalPDF(anno);
+				if (content && content.trim() !== "") {
+					//Hier später dataview-metadata feld index:: implementieren
+					text += content + '\n';
+				}
+			});
+		}
+		
+		return text;
 	}
 
 	get noteFromExternalPDFsTemplate(): Template {
