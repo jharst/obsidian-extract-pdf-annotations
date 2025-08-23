@@ -35,7 +35,7 @@ export class PDFAnnotationPluginFormatter {
 				if (anno.body && anno.body.includes("#Bibliografie")) {
 					bibliography.push(anno);
 				} else {
-					underlines.push(anno);
+					index.push(anno);
 				}
 				return;
 			}
@@ -118,9 +118,9 @@ export class PDFAnnotationPluginFormatter {
 			});
 		}
 		
-		if (underlines.length > 0) {
+		if (index.length > 0) {
 			text += "\n## Index\n";
-			underlines.forEach((anno) => {
+			index.forEach((anno) => {
 				let content = isExternalFile
 				? this.getContentForHighlightFromExternalPDF(anno)
 				: this.getContentForHighlightFromInternalPDF(anno);
