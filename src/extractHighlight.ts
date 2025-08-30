@@ -128,7 +128,7 @@ async function loadPage(
 			console.log("Highlighted Text: " + anno.highlightedText);
 		}
 		if (anno.subtype == 'Highlight' && filterByHashtag) { 
-          if (!anno.contentsObj.str.includes('#')) {
+          if (!anno.contentsObj.str.includes('#') && !anno.contentsObj.str.includes('++')) {
             console.log(`Skipping… ` + anno.subtype + ` ` + anno.contentsObj.str)
             return;
           }
