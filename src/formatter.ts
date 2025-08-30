@@ -101,10 +101,11 @@ export class PDFAnnotationPluginFormatter {
 					let lastline = lines[lines.length - 2];
 					let hashpart = lastline.match(/#.*$/)[0];
 					lastline = lastline.replace(/#.*$/, '').trim();
-					lines[lines.length - 2] = lastline + '[…]' + content + ' ' + hashpart + '\n';
+					console.log(lastline, '\n', content);
+					lines[lines.length - 2] = lastline + ' […] ' + content + ' ' + hashpart + '\n';
     				text = lines.join("\n");
 				} else {
-						content = '\t'.repeat(indentLevel) + content + '\n';
+					content = '\t'.repeat(indentLevel) + content + '\n';
 				}
 			text += content;
 			}
