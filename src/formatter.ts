@@ -97,7 +97,7 @@ export class PDFAnnotationPluginFormatter {
 					content = '\t'.repeat(indentLevel + 1) + content + '\n';
 				} else if (content.match(/\+\+/)) {
 					const lines = text.split("\n");
-				    content = content.replace(/- $$"$$ | \+\+$/g, '').trim();
+				    content = content.replace(/- \["\]|\+\+.*$/g, '').trim();
 					let lastline = lines[lines.length - 2];
 					let hashpart = lastline.match(/#.*$/)[0];
 					lastline = lastline.replace(/#.*$/, '').trim();
