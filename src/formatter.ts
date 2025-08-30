@@ -85,6 +85,7 @@ export class PDFAnnotationPluginFormatter {
 					var hashtagCount = match ? match[0].length : 0;
 					indentLevel = hashtagCount;
 					content = '\t'.repeat(hashtagCount - 1) + content + '\n';
+					text += content;
 				} else if (content.match(/#Quote/)) {
 					const lines = text.split("\n");
 					const substr = lines[lines.length - 2];
@@ -95,6 +96,7 @@ export class PDFAnnotationPluginFormatter {
 					};
 					text = lines.join("\n");
 					content = '\t'.repeat(indentLevel + 1) + content + '\n';
+					text += content;
 				} else if (content.match(/\+\+/)) {
 					const lines = text.split("\n");
 				    content = content.replace(/- \["\]|\+\+.*$/g, '').trim();
@@ -106,8 +108,8 @@ export class PDFAnnotationPluginFormatter {
     				text = lines.join("\n");
 				} else {
 					content = '\t'.repeat(indentLevel) + content + '\n';
+					text += content;
 				}
-			text += content;
 			}
 		});
 
