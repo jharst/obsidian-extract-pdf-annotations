@@ -78,7 +78,7 @@ export class PDFAnnotationPluginFormatter {
 				}
 			}
 
-			// Check for hastags and add tabs
+			// Check for hastags (indent), Quotes (%%fold%%) and links (++)
 			if (content && content.trim() !== "") {
 				if (content.match(/#+\s/)) {
 					const match = content.match(/(?<=\s)#+(?=\s)/);				
@@ -86,16 +86,20 @@ export class PDFAnnotationPluginFormatter {
 					indentLevel = hashtagCount;
 					content = '\t'.repeat(hashtagCount - 1) + content + '\n';
 				} else if (content.match(/#Quote/)) {
-						const lines = text.split("\n");
-						const substr = lines[lines.length - 2];
-						console.log("vorletzte Zeile: " + substr);
-  						if (!substr.includes("[\"]")) {
-  							console.log("vorletzte Zeile enthält kein Zitat!");
-  							lines[lines.length - 2] += "%% fold %%";
-  						};
-  						text = lines.join("\n");
-						content = '\t'.repeat(indentLevel + 1) + content + '\n';
-						// text = text.replace(/\n$/, '%%FOLD%%\n');
+					const lines = text.split("\n");
+					const substr = lines[lines.length - 2];
+					console.log("vorletzte Zeile: " + substr);
+					if (!substr.includes("[\"]")) {
+						console.log("vorletzte Zeile enthält kein Zitat!");
+						lines[lines.length - 2] += "%% fold %%";
+					};
+					text = lines.join("\n");
+					content = '\t'.repeat(indentLevel + 1) + content + '\n';
+				} else if (content.match(/\+\+/)) {
+					const lines = text.split("\n");
+					const substr = lines[lines.length - 2];
+					substr += ' […] ' + content + '\n';
+					text += lines.join("\n");
 				} else {
 						content = '\t'.repeat(indentLevel) + content + '\n';
 				}
