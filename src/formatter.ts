@@ -102,7 +102,7 @@ export class PDFAnnotationPluginFormatter {
 				    content = content.replace(/- \["\]|\+\+.*$/g, '').trim();
 					let lastline = lines[lines.length - 2];
 					let hashpart = lastline.match(/#.*$/)[0];
-					lastline = lastline.replace(/#.*$/, '').trim();
+					lastline = lastline.replace(/#.*$/, '').trimEnd();
 					console.log(lastline, '\n', content);
 					lines[lines.length - 2] = lastline + ' […] ' + content + ' ' + hashpart + '\n';
     				text = lines.join("\n");
